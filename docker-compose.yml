@@ -1,0 +1,12 @@
+version: '3.8'
+
+services:
+  api-solid-pg:
+    image: bitnami/postgresql
+    ports:
+      - "5440:5432"
+    environment:
+      - POSTGRESQL_USERNAME=gympass
+      - POSTGRESQL_PASSWORD=gympass321
+      - POSTGRESQL_DATABASE=gympassapp
+
