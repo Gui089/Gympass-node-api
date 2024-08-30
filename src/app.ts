@@ -1,6 +1,8 @@
 import express from 'express';
-import {PrismaClient} from '@prisma/client';
+import { appRoutes } from './http/routes';
 
 export const app = express();
 
-const prisma = new PrismaClient();
+app.use(express.json());
+
+appRoutes(app);
