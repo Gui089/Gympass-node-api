@@ -1,7 +1,6 @@
 import { z } from 'zod';
 import { Request, Response } from 'express';
-import {hash} from 'bcryptjs';
-import { prisma } from '../../lib/prisma';
+import { registerService } from '../../services/register-service';
 
 
 export async function registerController (req:Request, res:Response){
@@ -13,25 +12,15 @@ export async function registerController (req:Request, res:Response){
 
     const { name, email, password } = registerBodySchema.parse(req.body);
 
-    const password_hash = await hash(password, 6);
-
-    const userWithSameEmail = await prisma.user.findUnique({
-        where: {
-            email,
-        }
-    });
-
-    if(userWithSameEmail) {
-        return res.status(409).send();
-    }
-
-    await prisma.user.create({
-        data : {
+    try {
+        await registerService({
             name,
             email,
-            password_hash
-        }
-    });
+            password
+        });
+    } catch (err) {
+        return res.status(409).send();
+    }
 
     res.status(201).send();
 }
