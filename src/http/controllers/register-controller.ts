@@ -1,6 +1,7 @@
 import { z } from 'zod';
 import { Request, Response } from 'express';
-import { registerService } from '../../services/register-service';
+import { RegisterService } from '../../services/register-service';
+import { PrismaUserRepository } from '../../repositories/prisma/prisma-users-repository';
 
 
 export async function registerController (req:Request, res:Response){
@@ -13,11 +14,10 @@ export async function registerController (req:Request, res:Response){
     const { name, email, password } = registerBodySchema.parse(req.body);
 
     try {
-        await registerService({
-            name,
-            email,
-            password
-        });
+        const prismaUsersRepository = new PrismaUserRepository()
+        const RegisterServiceUsers = new RegisterService(prismaUsersRepository)
+
+        RegisterServiceUsers.execute({name, email, password});
     } catch (err) {
         return res.status(409).send();
     }
