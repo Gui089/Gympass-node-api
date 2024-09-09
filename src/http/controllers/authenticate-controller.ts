@@ -3,6 +3,7 @@ import { Request, Response } from 'express';
 import { PrismaUserRepository } from '../../repositories/prisma/prisma-users-repository';
 import { AuthenticateService } from '../../services/authenticate-service';
 import { InvalidCredentialsError } from '../../services/errors/invalid-credentials';
+import { makeAthenticateService } from '../../services/factories/make-athenticate-service';
 
 
 export async function authenticateController (req:Request, res:Response){
@@ -14,8 +15,8 @@ export async function authenticateController (req:Request, res:Response){
     const { email, password } = authenticateBodySchema.parse(req.body);
 
     try {
-        const prismaUsersRepository = new PrismaUserRepository()
-        const RegisterServiceUsers = new AuthenticateService(prismaUsersRepository)
+        
+        const RegisterServiceUsers = makeAthenticateService();
 
         RegisterServiceUsers.execute({ email, password});
     } catch (err) {
